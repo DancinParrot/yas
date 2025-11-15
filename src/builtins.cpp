@@ -10,7 +10,6 @@ vector<string> builtin_str = {"cd", "help", "exit"};
 
 int (*builtin_func[3])(vector<string>) = {&cd, &help, &exit};
 
-// TODO
 void pointers(vector<string> tokens, vector<char *> &args) {
   // After tokenize, return vector of pointers to tokens
   for (size_t i = 0; i < tokens.size(); i++) {

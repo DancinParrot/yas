@@ -2,13 +2,21 @@
 #include <bits/stdc++.h>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <sstream>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 using namespace std;
+
+// Trim from the end (in place)
+// Source: https://stackoverflow.com/questions/216823/how-can-i-trim-a-stdstring
+inline void rtrim(std::string &s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(),
+                       [](unsigned char ch) { return !std::isspace(ch); })
+              .base(),
+          s.end());
+}
 
 int start(vector<string> &tokens) {
   pid_t pid, wpid;
@@ -38,11 +46,13 @@ int start(vector<string> &tokens) {
 }
 
 vector<string> token(string line) {
+  rtrim(line);
   stringstream ss(line);
-  vector<string> tokens(line.size());
+  vector<string> tokens;
 
-  for (auto &i : tokens) {
-    ss >> i;
+  string token;
+  while (ss >> token) {
+    tokens.push_back(token);
   }
 
   return tokens;
@@ -71,8 +81,10 @@ void shell() {
     cout << "> ";
 
     getline(cin, line);
-    args = token(line);
-    status = exec(args);
+    if (line.size() != 0) {
+      args = token(line);
+      status = exec(args);
+    }
   } while (status);
 }
 
