@@ -2,7 +2,9 @@
 
 using namespace std;
 
-int cd(vector<char *> args);
-int help(vector<char *> args);
-int exit(vector<char *> args);
+int cd(vector<string> tokens);
+int help(vector<string> tokens);
+int exit(vector<string> tokens);
+void pointers(vector<string> tokens, char **args);
 extern vector<string> builtin_str;
+extern int (*builtin_func[])(vector<string>);

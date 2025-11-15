@@ -2,6 +2,7 @@
 #include <bits/stdc++.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -9,9 +10,18 @@
 
 using namespace std;
 
-int start(vector<char *> args) {
+int start(vector<string> &tokens) {
   pid_t pid, wpid;
   int status;
+
+  // The function, execvp() provides an array of pointers to null-terminated
+  // strings, so add 1 for null
+  vector<char *> args(tokens.size() + 1);
+
+  // After tokenize, return vector of pointers to tokens
+  for (size_t i = 0; i < tokens.size(); i++) {
+    args[i] = &tokens[i][0];
+  }
 
   pid = fork();
   if (pid == 0) {
@@ -30,7 +40,7 @@ int start(vector<char *> args) {
   return 1;
 }
 
-vector<char *> split(string line) {
+vector<string> token(string line) {
   stringstream ss(line);
   vector<string> tokens(line.size());
 
@@ -38,43 +48,33 @@ vector<char *> split(string line) {
     ss >> i;
   }
 
-  // After tokenize, return vector of pointers to tokens
-  vector<char *> args(tokens.size() + 1);
-
-  // The function, execvp() provides an array of pointers to null-terminated
-  // strings, so add 1 for null
-  for (size_t i = 0; i < tokens.size(); i++) {
-    args[i] = &tokens[i][0];
-  }
-
-  return args;
+  return tokens;
 }
 
-int exec(vector<char *> args) {
-  if (args[0] == NULL) {
+int exec(vector<string> tokens) {
+  if (tokens[0] == "") {
     return 1;
   }
 
   for (int i = 0; i < builtin_str.size(); i++) {
-    const char *str = builtin_str[i].c_str();
-    if (strcmp(args[0], str) == 0) {
-      return 1;
+    if (tokens[0] == builtin_str[i]) {
+      return (*builtin_func[i])(tokens);
     }
   }
 
-  return start(args);
+  return start(tokens);
 }
 
 void shell() {
   string line;
-  vector<char *> args;
+  vector<string> args;
   int status;
 
   do {
-    printf(">");
+    cout << "> ";
 
-    cin >> line;
-    args = split(line);
+    getline(cin, line);
+    args = token(line);
     status = exec(args);
   } while (status);
 }

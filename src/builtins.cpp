@@ -8,10 +8,12 @@ using namespace std;
 
 vector<string> builtin_str = {"cd", "help", "exit"};
 
-int (*builtin_func[])(vector<char *>) = {&cd, &help, &exit};
+int (*builtin_func[3])(vector<string>) = {&cd, &help, &exit};
 
-int cd(vector<char *> args) {
+// TODO
+void pointers(vector<string> tokens, char **args);
 
+int cd(vector<string> args) {
   if (args[1] == NULL) {
     cerr << "shell: expected argument to \"cd\"\n";
   } else {
@@ -22,7 +24,7 @@ int cd(vector<char *> args) {
   return 1;
 }
 
-int help(vector<char *> args) {
+int help(vector<string> args) {
   cout << "My Shell\n";
   cout << "Available commands are below:\n";
 
@@ -33,4 +35,4 @@ int help(vector<char *> args) {
   return 1;
 }
 
-int exit(vector<char *> args) { return 0; }
+int exit(vector<string> args) { return 0; }
