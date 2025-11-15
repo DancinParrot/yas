@@ -23,14 +23,14 @@ release: dirs
 
 .PHONY: dirs
 dirs:
-	@echo "Creating build directories"
+	@echo "Creating build directories..."
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(BIN_DIR)
 
 .PHONY: clean
 clean:
-	@echo "Deleting build directories"
-	@$(RM) -r $(BUILD_DIR)
+	@echo "Deleting build directories..."
+	@$(RM) -rv $(BUILD_DIR)
 
 
 all: $(BIN) run
