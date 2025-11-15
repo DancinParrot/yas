@@ -18,10 +18,7 @@ int start(vector<string> &tokens) {
   // strings, so add 1 for null
   vector<char *> args(tokens.size() + 1);
 
-  // After tokenize, return vector of pointers to tokens
-  for (size_t i = 0; i < tokens.size(); i++) {
-    args[i] = &tokens[i][0];
-  }
+  pointers(tokens, args);
 
   pid = fork();
   if (pid == 0) {

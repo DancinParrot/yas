@@ -11,9 +11,19 @@ vector<string> builtin_str = {"cd", "help", "exit"};
 int (*builtin_func[3])(vector<string>) = {&cd, &help, &exit};
 
 // TODO
-void pointers(vector<string> tokens, char **args);
+void pointers(vector<string> tokens, vector<char *> &args) {
+  // After tokenize, return vector of pointers to tokens
+  for (size_t i = 0; i < tokens.size(); i++) {
+    args[i] = &tokens[i][0];
+  }
+}
 
-int cd(vector<string> args) {
+int cd(vector<string> tokens) {
+
+  vector<char *> args(tokens.size() + 1);
+
+  pointers(tokens, args);
+
   if (args[1] == NULL) {
     cerr << "shell: expected argument to \"cd\"\n";
   } else {
@@ -24,7 +34,8 @@ int cd(vector<string> args) {
   return 1;
 }
 
-int help(vector<string> args) {
+int help(vector<string> tokens) {
+
   cout << "My Shell\n";
   cout << "Available commands are below:\n";
 
@@ -35,4 +46,4 @@ int help(vector<string> args) {
   return 1;
 }
 
-int exit(vector<string> args) { return 0; }
+int exit(vector<string> tokens) { return 0; }
